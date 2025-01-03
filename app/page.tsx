@@ -17,6 +17,7 @@ import {
   getHoroscopeIcon,
   getChineseZodiacIcon,
 } from "@/app/common/function";
+import { getProfile } from "@/app/common/api";
 
 export interface Profile {
   email: string;
@@ -45,8 +46,6 @@ export default function Home() {
   const day = parseInt(dayStr, 10);
   const month = parseInt(monthStr, 10);
   const year = parseInt(yearStr, 10);
-  console.log(birthday);
-  console.log(calculateAge(day, month, year));
 
   function formattedBirthday() {
     return (
@@ -62,22 +61,7 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          "https://techtest.youapp.ai/api/getProfile",
-          {
-            method: "GET",
-            headers: {
-              Accept: "*/*",
-              "x-access-token": access_token as string,
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-
-        const data = await response.json();
+        const data = await getProfile(access_token);
         console.log(data);
         setProfileData(data?.data);
       } catch (error) {
@@ -106,7 +90,7 @@ export default function Home() {
           </span>
         </section>
 
-        <section className="gap-y-4 w-full rounded-sm bg-white">
+        <section className="gap-y-4 w-full rounded-sm">
           <div className="absolute w-fit pl-4 top-56">
             <div className="flex flex-col gap-1">
               <span className="font-bold">

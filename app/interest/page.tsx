@@ -7,6 +7,7 @@ import { WithAuth } from "@/app/context/PrivateRoute";
 
 import { Chip } from "@nextui-org/react";
 import { IoChevronBackOutline } from "react-icons/io5";
+import { getProfile, updateInterest } from "@/app/common/api";
 
 export interface UpdateProfileResponse {
   message: string;
@@ -88,31 +89,18 @@ export default function Interest() {
   const processForm = async () => {
     try {
       setLoading(true);
-      await updateInterest({
-        interests: interestLists,
-      });
+      await updateInterest(
+        {
+          interests: interestLists,
+        },
+        access_token
+      );
       router.push("/", { scroll: false });
     } catch (error) {
       console.log(error);
     } finally {
       setLoading(false);
     }
-  };
-  const updateInterest = async (data: { interests: string[] }) => {
-    const response = await fetch(
-      `https://techtest.youapp.ai/api/updateProfile`,
-      {
-        method: "PUT",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "x-access-token": access_token as string,
-        },
-        body: JSON.stringify(data),
-      }
-    );
-    const responseJson: UpdateProfileResponse = await response.json();
-    return responseJson;
   };
 
   return (

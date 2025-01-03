@@ -32,6 +32,7 @@ import {
 import { z } from "zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { getProfile, updateProfile } from "@/app/common/api";
 
 const FormDataSchema = z.object({
   name: z.string().min(1, { message: "Name consists of at least 1 letter" }),
@@ -103,22 +104,7 @@ export default function About() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          "https://techtest.youapp.ai/api/getProfile",
-          {
-            method: "GET",
-            headers: {
-              Accept: "*/*",
-              "x-access-token": access_token as string,
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-
-        const data = await response.json();
+        const data = await getProfile(access_token);
         console.log(data);
         setProfileData(data?.data);
       } catch (error) {
@@ -146,42 +132,22 @@ export default function About() {
   const processForm: SubmitHandler<Inputs> = async (data) => {
     try {
       setLoading(true);
-      await updateProfile({
-        name: data?.name,
-        gender: data?.gender,
-        birthday: birthDate,
-        height: Number(data?.height),
-        weight: Number(data?.weight),
-      });
+      await updateProfile(
+        {
+          name: data?.name,
+          gender: data?.gender,
+          birthday: birthDate,
+          height: Number(data?.height),
+          weight: Number(data?.weight),
+        },
+        access_token
+      );
       router.push("/", { scroll: false });
     } catch (error) {
       console.log(error);
     } finally {
       setLoading(false);
     }
-  };
-
-  const updateProfile = async (data: {
-    name: string;
-    gender: string;
-    birthday: string;
-    height: number;
-    weight: number;
-  }) => {
-    const response = await fetch(
-      `https://techtest.youapp.ai/api/updateProfile`,
-      {
-        method: "PUT",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "x-access-token": access_token as string,
-        },
-        body: JSON.stringify(data),
-      }
-    );
-    const responseJson: UpdateProfileResponse = await response.json();
-    return responseJson;
   };
 
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
