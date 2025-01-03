@@ -53,6 +53,8 @@ export default function Register() {
   const togglePassword = () => {
     setShowPassword(!showPassword);
   };
+  const toggleConfirmPassword = () =>
+    setShowConfirmPassword(!showConfirmPassword);
 
   const {
     register,
@@ -147,7 +149,7 @@ export default function Register() {
           }}
         />
         <Input
-          type={showPassword ? "text" : "password"}
+          type={showConfirmPassword ? "text" : "password"}
           placeholder="Confirm Password"
           variant="faded"
           size="lg"
@@ -157,8 +159,8 @@ export default function Register() {
             errors.confirmPassword && errors.confirmPassword.message
           }
           endContent={
-            <Button isIconOnly onClick={togglePassword}>
-              {showPassword ? (
+            <Button isIconOnly onClick={toggleConfirmPassword}>
+              {showConfirmPassword ? (
                 <LuEye className="self-center text-2xl text-default-400" />
               ) : (
                 <LuEyeOff className="self-center text-2xl text-default-400" />

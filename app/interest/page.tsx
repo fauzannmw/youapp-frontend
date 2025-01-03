@@ -61,22 +61,7 @@ export default function Interest() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          "https://techtest.youapp.ai/api/getProfile",
-          {
-            method: "GET",
-            headers: {
-              Accept: "*/*",
-              "x-access-token": access_token as string,
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-
-        const data = await response.json();
+        const data = await getProfile(access_token);
         setInterestLists(data?.data?.interests);
       } catch (error) {
         console.error("Error fetching data:", error);
