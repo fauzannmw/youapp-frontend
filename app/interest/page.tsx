@@ -29,7 +29,12 @@ export default function Interest() {
   const [interest, setInterest] = useState("");
   const [interestLists, setInterestLists] = useState<string[]>([]);
 
-  const access_token = sessionStorage.getItem("authToken");
+  const [access_token, setAccessToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const token = sessionStorage.getItem("authToken");
+    setAccessToken(token);
+  }, []);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

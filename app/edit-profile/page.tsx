@@ -84,8 +84,12 @@ export default function About() {
   const month = parseInt(monthStr, 10);
   const year = parseInt(yearStr, 10);
 
-  const access_token = sessionStorage.getItem("authToken");
+  const [access_token, setAccessToken] = useState<string | null>(null);
 
+  useEffect(() => {
+    const token = sessionStorage.getItem("authToken");
+    setAccessToken(token);
+  }, []);
   console.log("profileData : ", profileData);
 
   useEffect(() => {

@@ -12,6 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { AuthContext } from "@/app/context/AuthContext";
 import { checkIsEmail } from "@/app/common/function";
+import { loginUser } from "@/app/common/api";
 
 const FormDataSchema = z.object({
   emailORusername: z
@@ -54,37 +55,19 @@ export default function Login() {
       setLoading(true);
       const checkEmail = checkIsEmail(data?.emailORusername);
 
-      await loginUser({
+      const responseJson = await loginUser({
         email: checkEmail ? data?.emailORusername : "",
         username: checkEmail ? "" : data?.emailORusername,
         password: data?.password,
       });
+
+      login(responseJson.access_token);
       router.push("/", { scroll: false });
     } catch (error) {
       console.log(error);
     } finally {
       setLoading(false);
     }
-  };
-
-  console.log(errors?.emailORusername);
-
-  const loginUser = async (data: {
-    email?: string;
-    username?: string;
-    password: string;
-  }) => {
-    const response = await fetch(`https://techtest.youapp.ai/api/login`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    const responseJson: LoginResponse = await response.json();
-    login(responseJson.access_token);
-    return responseJson;
   };
 
   return (

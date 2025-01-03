@@ -32,9 +32,14 @@ export interface Profile {
 
 export default function Home() {
   const [profileData, setProfileData] = useState<Profile>();
-  const access_token = sessionStorage.getItem("authToken");
-  const birthdate = profileData?.birthday.split(" ");
+  const [access_token, setAccessToken] = useState<string | null>(null);
 
+  useEffect(() => {
+    const token = sessionStorage.getItem("authToken");
+    setAccessToken(token);
+  }, []);
+
+  const birthdate = profileData?.birthday.split(" ");
   const birthday = profileData?.birthday || "01 01 2000";
   const [dayStr, monthStr, yearStr] = birthday.split(" ");
   const day = parseInt(dayStr, 10);
